@@ -1,7 +1,8 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
-import { AxiosRequestConfig, AxiosResponse } from 'axios';
-import { Observable, map } from 'rxjs';
+import { map } from 'rxjs';
+
+import { Parser } from './utils/parser';
 
 @Injectable()
 export class AppService {
@@ -17,6 +18,10 @@ export class AppService {
           Cookie: cookie,
         },
       })
-      .pipe(map((response) => response.data));
+      .pipe(
+        map((response) =>
+          Parser.parseJSONRecursively(response.data.response.result),
+        ),
+      );
   }
 }
